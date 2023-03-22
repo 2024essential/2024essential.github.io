@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>검색 홈페이지</title>
+<style>
+  /* 기본 폰트 설정 및 스타일링 */
+  body {
+    font-family: Arial, sans-serif;
+  }
+  /* 검색 입력창 및 버튼을 중앙에 위치시키기 위한 스타일링 */
+  #search-container {
+    display: flex;
+    justify-content: center;
+    margin: 30px 0;
+  }
+  /* 검색 결과를 보여줄 영역에 마진 추가 */
+  #results {
+    margin-top: 20px;
+  }
+</style>
+</head>
+<body>
+
+<!-- 검색 입력창 및 버튼 -->
+<div id="search-container">
+  <input type="text" id="search-input" placeholder="검색어를 입력하세요...">
+  <button id="search-button">검색</button>
+</div>
+
+<!-- 검색 결과를 표시할 영역 -->
+<div id="results"></div>
+
+<script>
+  // 검색 버튼에 클릭 이벤트 리스너 추가
+  document.getElementById("search-button").addEventListener("click", async () => {
+    // 검색어 가져오기
+    const searchInput = document.getElementById("search-input").value;
+    // 검색 결과 영역 가져오기
+    const resultsContainer = document.getElementById("results");
+    // 검색 결과 초기화
+    resultsContainer.innerHTML = "";
+
+    // 검색어가 비어있을 경우 경고창 표시
+    if (!searchInput) {
+      alert("검색어를 입력해주세요.");
+      return;
+    }
+
+    // 파일명 목록을 가져올 서버 API 주소 설정
+    const apiURL = "/file_list.json";
+
+
+    try {
+      // API 호출하여 파일 목록 가져오기
+      const response = await fetch(apiURL);
+      const fileList = await response.json();
+
+      // 파일 목록에서 검색어와 일치하는 파일 찾기
+      const matchingFile = fileList.find(filename => {
+        const [name, extension] = filename.split(".");
+        return extension === "pdf" && name === searchInput;
+      });
+
+      // 일치하는 파일이 있는 경우 결과 영역에 PDF 파일 표시
+      if (matchingFile) {
+        const resultElement = document.createElement("iframe");
+        resultElement.src = `/data/${matchingFile}`;
+        resultElement.width = "100%";
+        resultElement.height = "600px";
+        resultsContainer.appendChild(resultElement);
+      } else {
+        // 일치하는 파일이 없는 경우 메시지 표시
+        resultsContainer.innerHTML = "검색 결과가 없습니다.";
+      }
+    } catch (error) {
+      // 오류 처리 및 경고창 표시
+      console.error(error);
+      alert("검색 중 오류가 발생했습니다.");
+    }
+  });
+</script>
+</body>
+</html>
