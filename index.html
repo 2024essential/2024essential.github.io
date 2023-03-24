@@ -54,7 +54,7 @@
             <p>- 이 자료는 2024학년도 대학 기본계획 검색기입니다.</p>
             <p>- 서울 동양고등학교 김진혁 선생님이 만들었습니다.</p>
             <p>- 사용에 문의가 있으시면 kimjh0630@naver.com 으로 연락바랍니다.</p>
-            <p>- OO대학교까지 입력해야 검색이 됩니다. 예를 들어 서울대 라고 검색하면 검색이 되지 않고 서울대학교라고 검색해야지 검색이 됩니다.</p>
+            <p>- OO대학교까지 입력해야 검색이 됩니다. 예를 들어 서울대라고 검색하면 검색이 되지 않고 서울대학교라고 검색해야지 검색됩니다.</p>
             <p>- 각종 기술교육원의 경우 영문 대문자로 입력해야 합니다. 예를 들어 "digst"는 검색이 되지 않고 "DGIST"라고 검색해야 검색됩니다.</p>
         </div>
         <!-- 오른쪽 영역: 검색 결과 -->
@@ -63,46 +63,61 @@
         </div>
     </div>
 
-    <script>
-        const searchButton = document.getElementById('searchButton');
-        const searchInput = document.getElementById('searchInput');
-        const resultsContainer = document.getElementById('results');
-        const leftSide = document.getElementById('leftSide');
-        const apiURL = "/file_list.json";
+</div>
+<!-- 오른쪽 영역: 검색 결과 -->
+<div class="right-side">
+    <div class="results-container" id="results"></div>
+</div>
+</div>
 
-        searchButton.addEventListener('click', async () => {
-            const searchTerm = searchInput.value.trim();
-            if (!searchTerm) {
-                alert("검색어를 입력하세요.");
-                return;
-            }
+<script>
+const searchButton = document.getElementById('searchButton');
+const searchInput = document.getElementById('searchInput');
+const resultsContainer = document.getElementById('results');
+const leftSide = document.getElementById('leftSide');
+const apiURL = "/file_list.json";
 
-            try {
-                const response = await fetch(apiURL);
-                if (!response.ok) {
-                    throw new Error("API 호출 실패");
-                }
+const search = async () => {
+    const searchTerm = searchInput.value.trim();
+    if (!searchTerm) {
+        alert("검색어를 입력하세요.");
+        return;
+    }
 
-                const fileList = await response.json();
-                const fileMatch = fileList.find(file => file.replace(".pdf", "") === searchTerm);
+    try {
+        const response = await fetch(apiURL);
+        if (!response.ok) {
+            throw new Error("API 호출 실패");
+        }
 
-                resultsContainer.innerHTML = '';
+        const fileList = await response.json();
+        const fileMatch = fileList.find(file => file.replace(".pdf", "") === searchTerm);
 
-                if (fileMatch) {
-                    const pdfURL = `./data/${fileMatch}`;
-                    const pdfIframe = `<iframe src="${pdfURL}" width="100%" height="600px"></iframe>`;
-                    resultsContainer.innerHTML = pdfIframe;
-                    leftSide.style.display = 'none';
-                } else {
-                    resultsContainer.innerHTML = "<p>검색 결과가 없습니다.</p>";
-                    leftSide.style.display = 'block';
-                }
-            } catch (error) {
-                console.error(error);
-                alert("검색 중 오류가 발생했습니다.");
-            }
-        });
-    </script>
+        resultsContainer.innerHTML = '';
+
+        if (fileMatch) {
+            const pdfURL = `./data/${fileMatch}`;
+            const pdfIframe = `<iframe src="${pdfURL}" width="100%" height="600px"></iframe>`;
+            resultsContainer.innerHTML = pdfIframe;
+            leftSide.style.display = 'none';
+        } else {
+            resultsContainer.innerHTML = "<p>검색 결과가 없습니다.</p>";
+            leftSide.style.display = 'block';
+        }
+    } catch (error) {
+        console.error(error);
+        alert("검색 중 오류가 발생했습니다.");
+    }
+};
+
+searchButton.addEventListener('click', search);
+searchInput.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+        search();
+    }
+});
+</script>
+
 </body>
 </html>
 
