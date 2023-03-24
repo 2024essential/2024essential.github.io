@@ -12,6 +12,7 @@
             flex-direction: column;
             align-items: center;
             margin: 0 auto;
+            height: 100vh;
         }
 
         /* 컨테이너 스타일 */
@@ -19,12 +20,14 @@
             display: flex;
             width: 100%;
             justify-content: space-evenly;
+            height: calc(100% - 100px);
         }
 
         /* 왼쪽 및 오른쪽 영역 스타일 */
         .left-side, .right-side {
             flex: 1;
             padding: 20px;
+            overflow-y: auto;
         }
 
         /* 검색 입력창 및 버튼 스타일 */
@@ -38,6 +41,13 @@
         /* 검색 결과 영역 스타일 */
         .results-container {
             text-align: center;
+            height: 100%;
+        }
+
+        /* PDF iframe 스타일 */
+        iframe {
+            border: none;
+            height: 100%;
         }
     </style>
 </head>
