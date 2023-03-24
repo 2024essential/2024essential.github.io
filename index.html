@@ -54,6 +54,7 @@
             <p>- 이 자료는 2024학년도 대학 기본계획 검색기입니다.</p>
             <p>- 서울 동양고등학교 김진혁 선생님이 만들었습니다.</p>
             <p>- 사용에 문의가 있으시면 kimjh0630@naver.com 으로 연락바랍니다.</p>
+            <p>- OO대학교까지 입력해야 검색이 됩니다. 예를 들어 서울대 라고 검색하면 검색이 되지 않고 서울대학교라고 검색해야지 검색이 됩니다.</p>
             <p>- 각종 기술교육원의 경우 영문 대문자로 입력해야 합니다. 예를 들어 "digst"는 검색이 되지 않고 "DGIST"라고 검색해야 검색됩니다.</p>
         </div>
         <!-- 오른쪽 영역: 검색 결과 -->
@@ -83,7 +84,7 @@
                 }
 
                 const fileList = await response.json();
-                const fileMatch = fileList.find(file => file.replace(".pdf", "") === searchTerm.replaceAll("학교","")+"학교");
+                const fileMatch = fileList.find(file => file.replace(".pdf", "") === searchTerm);
 
                 resultsContainer.innerHTML = '';
 
